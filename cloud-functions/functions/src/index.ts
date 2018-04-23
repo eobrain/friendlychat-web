@@ -1,11 +1,13 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as _gcs from '@google-cloud/storage';
-import * as Vision from '@google-cloud/vision';
-import * as _spawn from 'child-process-promise';
 import * as path from 'path';
 import * as os from 'os';
 import * as fs from 'fs';
+
+const Vision = require('@google-cloud/vision');
+const _spawn = require('child-process-promise');
+
 
 const spawn = _spawn.spawn;
 const gcs = _gcs();
@@ -66,7 +68,7 @@ export const blurOffensiveImages = functions.storage.object().onFinalize(object 
   };
 
   // Check the image content using the Cloud Vision API.
-  return vision.safeSearchDetection(image).then(batchAnnotateImagesResponse => {
+  return vision.safeSearchDetection(image).then((batchAnnotateImagesResponse: any[]) => {
     const safeSearchResult = batchAnnotateImagesResponse[0].safeSearchAnnotation;
     const Likelihood = Vision.types.Likelihood;
     if (Likelihood[safeSearchResult.adult] >= Likelihood.LIKELY ||
@@ -80,7 +82,7 @@ export const blurOffensiveImages = functions.storage.object().onFinalize(object 
 });
 
 // Blurs the given image located in the given bucket using ImageMagick.
-function blurImage(filePath, bucketName) {
+function blurImage(filePath: string, bucketName: string) {
   const tempLocalFile = path.join(os.tmpdir(), path.basename(filePath));
   const messageId = filePath.split(path.sep)[1];
   const bucket = gcs.bucket(bucketName);
@@ -120,7 +122,7 @@ export const sendNotifications = functions.database.ref('/messages/{messageId}')
     }
   };
 
-  let tokens = []; // All Device tokens to send a notification to.
+  let tokens :any[] = []; // All Device tokens to send a notification to.
   // Get the list of device tokens.
   return admin.database().ref('fcmTokens').once('value').then(allTokens => {
     if (allTokens.val()) {
@@ -134,7 +136,7 @@ export const sendNotifications = functions.database.ref('/messages/{messageId}')
     return Promise.resolve({results: []});
   }).then(response => {
     // For each notification we check if there was an error.
-    const tokensToRemove = {};
+    const tokensToRemove : { [key:string]:string; }= {ignore:''};
     response.results.forEach((result, index) => {
       const error = result.error;
       if (error) {
