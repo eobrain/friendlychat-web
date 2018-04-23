@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "lib": ["es6"],
     "module": "commonjs",
     "noImplicitReturns": true,

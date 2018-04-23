@@ -10,3 +10,4 @@ node_modules/
 .firebaserc
 npm-debug.log
 /cloud-functions/functions/lib/
+firebase-debug.log
