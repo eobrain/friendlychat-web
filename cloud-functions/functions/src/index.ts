@@ -74,6 +74,10 @@ export const blurOffensiveImages = functions.storage.object().onFinalize(object 
     if (Likelihood[safeSearchResult.adult] >= Likelihood.LIKELY ||
         Likelihood[safeSearchResult.violence] >= Likelihood.LIKELY) {
       console.log('The image', object.name, 'has been detected as inappropriate.');
+      if (!object.name) {
+        console.log('Object has no name');
+        return null;
+      }
       return blurImage(object.name, object.bucket);
     }
     console.log('The image', object.name, 'has been detected as OK.');
