@@ -9,3 +9,4 @@ GoogleService-Info.plist
 node_modules/
 .firebaserc
 npm-debug.log
+/cloud-functions/functions/lib/
